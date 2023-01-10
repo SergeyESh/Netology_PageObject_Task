@@ -14,7 +14,7 @@ public class DashboardPage {
     private ElementsCollection cards = $$(".list__item div");
     private final String balanceStart = "баланс: ";
     private final String balanceFinish = " р.";
-    private SelenideElement depositButton = $("[data-test-id=action-deposit]");
+
 
     public DashboardPage() {
         heading.shouldBe(visible);
@@ -26,8 +26,7 @@ public class DashboardPage {
     }
 
     public TransferPage selectCard(DataHelper.CardInfo cardInfo) {
-        cards.findBy(attribute("data-test-id", cardInfo.getCardId()));
-        depositButton.click();
+        cards.findBy(attribute("data-test-id", cardInfo.getCardId())).$("button").click();
         return new TransferPage();
     }
 

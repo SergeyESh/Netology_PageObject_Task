@@ -53,7 +53,7 @@ class MoneyTransferTest {
         var transferPage = dashboardPage.selectCard(cardInfoSecond);
         transferPage.validTransfer(String.valueOf(amount), cardInfoFirst);
 
-        assertEquals(expectedFirstCardBalance, firstCardBalance);
+        assertEquals(expectedFirstCardBalance, dashboardPage.getCardBalance(cardInfoFirst));
         assertEquals(expectedSecondCardBalance, dashboardPage.getCardBalance(cardInfoSecond));
     }
 }
