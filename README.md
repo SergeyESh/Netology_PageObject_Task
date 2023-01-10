@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/kupw7efi8muxt9ja?svg=true)](https://ci.appveyor.com/project/SergeyESh/netology-pageobject-task)
