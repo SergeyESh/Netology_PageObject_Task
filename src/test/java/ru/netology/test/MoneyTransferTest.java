@@ -2,11 +2,12 @@ package ru.netology.test;
 
 import org.junit.jupiter.api.Test;
 import ru.netology.data.DataHelper;
-import ru.netology.page.DashboardPage;
 import ru.netology.page.LoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.netology.data.DataHelper.invalidAmount;
+import static ru.netology.data.DataHelper.validAmount;
 
 class MoneyTransferTest {
     @Test
@@ -21,9 +22,9 @@ class MoneyTransferTest {
 
         var cardInfoFirst = DataHelper.getFirstCardInfo();
         var cardInfoSecond = DataHelper.getSecondCardInfo();
-        var amount = 20_000;
         var firstCardBalance = dashboardPage.getCardBalance(cardInfoFirst);
         var secondCardBalance = dashboardPage.getCardBalance(cardInfoSecond);
+        var amount = validAmount(firstCardBalance);
         var expectedFirstCardBalance = firstCardBalance + amount;
         var expectedSecondCardBalance = secondCardBalance - amount;
         var transferPage = dashboardPage.selectCard(cardInfoFirst);
@@ -34,7 +35,7 @@ class MoneyTransferTest {
     }
 
     @Test
-    void shouldTransferMoneyFromSecondCard() {
+    void shouldShowErrorMesageIfAmountExceedsBalance() {
         var loginPage = open("http://localhost:9999", LoginPage.class);
 
         var authInfo = DataHelper.getAuthInfo();
@@ -45,16 +46,15 @@ class MoneyTransferTest {
 
         var cardInfoFirst = DataHelper.getFirstCardInfo();
         var cardInfoSecond = DataHelper.getSecondCardInfo();
-        var amount = 5_000;
         var firstCardBalance = dashboardPage.getCardBalance(cardInfoFirst);
         var secondCardBalance = dashboardPage.getCardBalance(cardInfoSecond);
-        var expectedFirstCardBalance = firstCardBalance - amount;
-        var expectedSecondCardBalance = secondCardBalance + amount;
+        var amount = invalidAmount(secondCardBalance);
         var transferPage = dashboardPage.selectCard(cardInfoSecond);
         transferPage.validTransfer(String.valueOf(amount), cardInfoFirst);
+        transferPage.findErrorMesage("Вы ввели сумму, превышающую остаток средств на Вашей карте. Пожалуйста, введите другую сумму");
 
-        assertEquals(expectedFirstCardBalance, dashboardPage.getCardBalance(cardInfoFirst));
-        assertEquals(expectedSecondCardBalance, dashboardPage.getCardBalance(cardInfoSecond));
+        assertEquals(firstCardBalance, dashboardPage.getCardBalance(cardInfoFirst));
+        assertEquals(secondCardBalance, dashboardPage.getCardBalance(cardInfoSecond));
     }
 }
 
